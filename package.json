@@ -1,0 +1,36 @@
+{
+  "name": "lazy-firestore",
+  "version": "0.1.0",
+  "description": "Useful commands of Google Cloud Firestore",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "firestore": "bin/firestore.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madnh/lazy-firestore.git"
+  },
+  "keywords": [
+    "firestore",
+    "firebase",
+    "google cloud"
+  ],
+  "author": "MaDnh",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/firestore": "^4.14.1",
+    "cac": "^6.7.3",
+    "consola": "^2.15.3",
+    "dayjs": "^1.10.6",
+    "fs-extra": "^10.0.0",
+    "glob": "^7.1.7",
+    "inquirer": "^8.1.2",
+    "p-limit": "^3.1.0"
+  },
+  "bugs": {
+    "url": "https://github.com/madnh/LazyFirestore/issues"
+  },
+  "homepage": "https://github.com/madnh/LazyFirestore#readme"
+}
