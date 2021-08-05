@@ -8,6 +8,12 @@
   "bin": {
     "firestore": "bin/firestore.js"
   },
+  "files": [
+    "bin",
+    "commands",
+    "utils",
+    "README.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madnh/lazy-firestore.git"
