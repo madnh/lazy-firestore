@@ -11,19 +11,32 @@
 
 ### Table of contents
 
-- [Command](#command)
+- [Table of contents](#table-of-contents)
+- [Install](#install)
+- [Usage](#usage)
 - [Setup projects](#setup-projects)
-  - [Real project](#real-project)
-  - [Firebase Emulator](#firebase-emulator)
+    - [Real project](#real-project)
+    - [Firebase Emulator](#firebase-emulator)
 - [Sub commands](#sub-commands)
-  - [dump](#dump)
-  - [restore](#restore)
-  - [update](#update)
-  - [clean](#clean)
-  - [tree](#tree)
-  - [doc](#doc)
+    - [⚡️ dump](#-dump)
+    - [⚡️ restore](#-restore)
+    - [⚡️ update](#-update)
+    - [⚡️ clean](#-clean)
+    - [⚡️ tree](#-tree)
+    - [⚡️ doc](#-doc)
 
-## Command
+## Install
+
+Install global:
+
+```shell
+npm i -g lazy-firestore
+```
+
+## Usage
+
+After install, use cli app named `firestore`
+
 ```
 firestore/0.1.0
 
@@ -73,7 +86,7 @@ export FIRESTORE_EMULATOR_HOST=localhost:8080
 
 ## Sub commands
 
-### dump
+### ⚡️ dump
 
 Export data to files
 
@@ -99,7 +112,7 @@ Examples:
 - `firestore dump` => `2021_08_04 09_45_42/`
 - `firestore dump case 1` => `2021_08_04 09_45_42 - case 1/`
 
-### restore
+### ⚡️ restore
 
 Restore exported data back to Firestore:
 
@@ -124,7 +137,7 @@ firestore restore "2021_08_04 09_45_42 - case 1"
 firestore restore "2021_08_04 09_45_42 - case 1" --only users --only posts
 ```
 
-### update
+### ⚡️ update
 
 Update document with data in a JSON file
 
@@ -146,7 +159,7 @@ Examples:
 firestore update --doc users/foo --path=city hanoi.json
 ```
 
-### clean
+### ⚡️ clean
 
 Clean Firestore - delete all documents. Only support Firebase Emulator
 
@@ -165,7 +178,7 @@ Examples:
 firestore clean
 ```
 
-### tree
+### ⚡️ tree
 
 Print tree of collections and its documents
 
@@ -185,7 +198,7 @@ firestore tree
 firestore tree news users
 ```
 
-### doc
+### ⚡️ doc
 
 View detail of documents
 
