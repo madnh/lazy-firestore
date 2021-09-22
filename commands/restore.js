@@ -5,7 +5,7 @@ const inquirer = require("inquirer");
 
 const { workingPath } = require('../utils/fs');
 const { scanFolders, scanFiles } = require('../utils/scan');
-const { restore, defaultConverter } = require("../utils/firestore");
+const { restore, defaultConverter, debug } = require("../utils/firestore");
 const { pick, isEmpty } = require("../utils/obj");
 const converter = require('../utils/firestore-converter');
 
@@ -20,13 +20,18 @@ function command(cac) {
       .example((bin) => `${bin} ${command}`)
       .example((bin) => `${bin} ${command} "2021_08_04 09_45_42 - case 1"`)
       .example((bin) => `${bin} ${command} "2021_08_04 09_45_42 - case 1" --only users --only posts`)
-      .option('--only <collection-name>', 'Collections to import', { type: [String] })
+      .option('--only <collection-name>', 'Collections to import')
       .option('--dump', 'Dump tree of selected snapshot')
+      .option('--debug', 'Use debug mode')
       .action(handler)
 }
 
 async function handler(snapshot, options) {
   defaultConverter(converter)
+
+  if (options.debug) {
+    debug(true)
+  }
 
   const dataDirPath = workingPath();
   const allSnapshots = await getAvailableSnapshots(dataDirPath);
@@ -46,13 +51,16 @@ async function handler(snapshot, options) {
   }
 
   consola.info('Snapshot: ', snapshotName);
-
+  consola.start('Load data')
   const snapshotData = await getSnapshotCollections(dataDirPath, snapshotName);
 
   if (isEmpty(snapshotData)) {
     consola.warn('Selected snapshot is empty');
     return;
   }
+
+  consola.info('Found collections:')
+  console.log(Object.keys(snapshotData).map(s => ' - ' + s).join("\n"));
 
   if (options.dump) {
     consola.info('Snapshot Tree:');
@@ -68,9 +76,10 @@ async function handler(snapshot, options) {
     restoreData = pick(snapshotData, restoreCollections);
   }
 
-  await restore(restoreData);
+  consola.start("Start restoring...")
+  const written = await restore(restoreData);
 
-  console.log('');
+  consola.info(`Wrote: ${written}`);
   consola.success('Done');
 }
 
@@ -80,7 +89,7 @@ async function getAvailableSnapshots(dir) {
 }
 
 /**
- * @param {string|string[]} only
+ * @param {string|string[]|undefined} only
  * @return {string[]|boolean}
  */
 function getRestoreCollections(only) {
