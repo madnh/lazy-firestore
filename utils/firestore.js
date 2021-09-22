@@ -1,6 +1,10 @@
+/**
+ * @typedef {path: string, data: any} DocItem
+ * @typedef {DocItem[]} DocsList
+ */
+
 const consola = require('consola');
 const { Firestore, setLogFunction } = require('@google-cloud/firestore');
-const pLimit = require('p-limit');
 
 let firestore;
 let converter = null
@@ -102,6 +106,10 @@ async function dump({ collections = true, includeValue = true } = {}) {
   return result;
 }
 
+/**
+ * @param {string} docId
+ * @return DocumentReference
+ */
 function docRef(docId) {
   return firestore.doc(docId).withConverter(converter);
 }
@@ -111,28 +119,88 @@ function collectionRef(collectionId) {
   return firestore.collection(collectionId).withConverter(converter);
 }
 
+/**
+ * @param {{}} snapshot
+ * @return {Promise<number>} number of docs restored
+ */
 async function restore(snapshot) {
-  const tasks = [];
-  const limit = pLimit(1);
+  /**
+   * @type {DocsList}
+   */
+  const allDocs = []
+  const collections = Object.keys(snapshot).sort()
 
-  for (const collection in snapshot) {
-    if (!snapshot.hasOwnProperty(collection)) {
-      continue
-    }
-
+  // create docs
+  for (const collection of collections) {
     const docs = snapshot[collection];
 
     for (const docId in docs) {
-      if (!docs.hasOwnProperty(docId)) {
-        continue
-      }
-
-      const docRef = firestore.doc([collection, docId].join('/')).withConverter(converter);
-      tasks.push(limit(() => docRef.set(docs[docId])));
+      allDocs.push({
+        path: [collection, docId].join('/'),
+        data: docs[docId]
+      })
     }
   }
 
-  return Promise.all(tasks)
+  return await writeBatch(allDocs);
+}
+
+
+/**
+ * @param {*[]} items
+ * @param {number} size
+ * @return {*[]}
+ */
+function splitToChunks(items, size) {
+  const chunks = []
+
+  for (let i = 0; i < items.length; i += size) {
+    chunks.push(items.slice(i, i + size))
+  }
+
+  return chunks;
+}
+
+/**
+ *
+ * @param {DocsList} docs
+ * @return {Promise<number>}
+ */
+async function writeBatch(docs) {
+  const chunks = splitToChunks(docs, 500)
+  let count = 0
+
+  for await (const chunk of chunks) {
+    const writeBatch = firestore.batch()
+
+    chunk.forEach(doc => {
+      const documentRef = firestore.doc(doc.path).withConverter(converter);
+      writeBatch.set(documentRef, doc.data);
+    })
+
+    await writeBatch.commit()
+    count += chunk.length
+  }
+
+  return count;
+}
+
+/**
+ * @param {DocumentReference[]} docs
+ * @return {Promise<number>}
+ */
+async function deleteBatch(docs) {
+  const chunks = splitToChunks(docs, 500)
+  let count = 0
+
+  for await (const chunk of chunks) {
+    const writeBatch = firestore.batch()
+    chunk.forEach(doc => writeBatch.delete(doc))
+    await writeBatch.commit()
+    count += chunk.length
+  }
+
+  return count;
 }
 
 async function set(docId, data, options = {}) {
@@ -151,5 +219,6 @@ module.exports = {
   docRef,
   collectionRef,
   restore,
+  deleteBatch,
   set,
 }
