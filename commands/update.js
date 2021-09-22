@@ -23,10 +23,10 @@ const Modes = {
 function command(cac) {
   const command = 'update'
   cac.command(`${command} <doc>`, 'Update document with data in a JSON file')
-      .example((bin) => `${bin} ${command} --doc users/foo --path=city hanoi.json`)
-      .option('--file <file>', 'Doc ID, ex: users/user-1')
-      .option('--debug', 'Use debug mode')
+      .example((bin) => `${bin} ${command} --path=city --file hanoi.json users/foo`)
+      .option('--file <file>', 'Path to update file')
       .option('--path <path>', 'Update path, ex: tags')
+      .option('--debug', 'Use debug mode')
       .option('--mode <merge|replace>', 'Update mode, accept: merge, replace', { default: Modes.Replace })
       .action(handler)
 }
