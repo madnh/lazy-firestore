@@ -1,7 +1,7 @@
 const consola = require("consola");
 const inquirer = require("inquirer");
 
-const { dump, docRef, debug } = require('../utils/firestore');
+const { dump, docRef, debug, deleteBatch } = require('../utils/firestore');
 const { forEach, isEmpty } = require('../utils/obj');
 
 module.exports = command
@@ -38,12 +38,9 @@ async function handler(options) {
 
   const selectedDocs = await selectDocs(tree);
 
-  for (const selectedDoc of selectedDocs) {
-    consola.start(selectedDoc);
-    const ref = docRef(selectedDoc);
-    await ref.delete();
-  }
+  const deleted = await deleteBatch(selectedDocs.map(doc => docRef(doc)))
 
+  consola.info(`Deleted: ${deleted}`)
   consola.success('Done');
 }
 
