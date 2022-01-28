@@ -6,7 +6,7 @@ const inquirer = require("inquirer");
 const { workingPath } = require('../utils/fs');
 const { scanFolders, scanFiles } = require('../utils/scan');
 const { restore, defaultConverter, debug } = require("../utils/firestore");
-const { pick, isEmpty } = require("../utils/obj");
+const { pick, isEmpty, omit } = require("../utils/obj");
 const converter = require('../utils/firestore-converter');
 
 module.exports = command
@@ -19,10 +19,12 @@ function command(cac) {
   cac.command(`${command} [snapshot]`, 'Restore Firestore from exported data')
       .example((bin) => `${bin} ${command}`)
       .example((bin) => `${bin} ${command} "2021_08_04 09_45_42 - case 1"`)
-      .example((bin) => `${bin} ${command} "2021_08_04 09_45_42 - case 1" --only users --only posts`)
-      .option('--only <collection-name>', 'Collections to import')
+      .example((bin) => `${bin} ${command} "2021_08_04 09_45_42 - case 1" --only users --only posts,news --excepts=users`)
+      .option('--only <collections>', 'Collections to import, support separate multi collection by comma, Ex: --only user --only=logs,news')
+      .option('--except <collections>', 'Collections to exclude, support separate multi collection by comma. Ex: --except=user,logs')
       .option('--dump', 'Dump tree of selected snapshot')
       .option('--debug', 'Use debug mode')
+      .option('--dryRun', 'Dry-run mode')
       .action(handler)
 }
 
@@ -67,13 +69,26 @@ async function handler(snapshot, options) {
     dumpSnapshotTree(snapshotData);
   }
 
-  const restoreCollections = getRestoreCollections(options.only);
+  const restoreCollections = parseCollectionsOption(options.only);
+  const ignoreCollections = parseCollectionsOption(options.except);
   let restoreData = snapshotData;
 
   if (restoreCollections) {
     console.log('');
     consola.info('Restore collections:', restoreCollections.join(', '));
     restoreData = pick(snapshotData, restoreCollections);
+  }
+  if (ignoreCollections) {
+    console.log('');
+    consola.info('Ignore collections:', ignoreCollections.join(', '));
+    restoreData = omit(snapshotData, ignoreCollections);
+  }
+
+  console.log('\nCollections to restore: \n', Object.keys(restoreData).sort().map(collection => ' - ' + collection).join("\n").trim());
+
+  if (options.dryRun) {
+    console.info("Dry-run mode, so bye!")
+    return
   }
 
   consola.start("Start restoring...")
@@ -89,20 +104,17 @@ async function getAvailableSnapshots(dir) {
 }
 
 /**
- * @param {string|string[]|undefined} only
+ * @param {string|string[]|undefined} value
  * @return {string[]|boolean}
  */
-function getRestoreCollections(only) {
-  if (only) {
-    if (typeof only === 'string') {
-      return [only];
+function parseCollectionsOption(value) {
+  if (value) {
+    if (typeof value === 'string') {
+      return value.split(',');
     }
-    if (Array.isArray(only)) {
-      return only
+    if (Array.isArray(value)) {
+      return value.map(str => str.split(',')).flat()
     }
-
-    consola.error('[only] parameter must be string or array of string');
-    process.exit(1);
   }
 
   return false;

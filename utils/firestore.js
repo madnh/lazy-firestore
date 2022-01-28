@@ -180,6 +180,7 @@ async function writeBatch(docs) {
 
     await writeBatch.commit()
     count += chunk.length
+    console.log('Restored: ', count);
   }
 
   return count;
