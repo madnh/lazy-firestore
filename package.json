@@ -1,6 +1,6 @@
 {
   "name": "lazy-firestore",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Useful commands of Google Cloud Firestore",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
