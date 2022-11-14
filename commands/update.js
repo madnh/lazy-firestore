@@ -98,12 +98,14 @@ async function handler(doc, options) {
 
     if (options.mode === Modes.Replace) {
       consola.info("Replace mode")
+      // https://googleapis.dev/nodejs/firestore/latest/Transaction.html#set
       return transaction.set(docRef, dataToUpdate, { merge: false });
     }
 
     if (options.mode === Modes.Merge) {
       consola.log('Merge mode');
-      return transaction.set(docRef, dataToUpdate, { merge: true });
+      // https://googleapis.dev/nodejs/firestore/latest/Transaction.html#update
+      return transaction.update(docRef, dataToUpdate);
     }
   })
 
