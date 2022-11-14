@@ -16,6 +16,7 @@ module.exports = converter
 
 
 function recursiveCastTimestamp(object) {
+  if(object === null || undefined === object) return object
   const result = {}
   for (const [key, value] of Object.entries(object)) {
     if (value instanceof Timestamp) {
