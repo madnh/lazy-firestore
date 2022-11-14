@@ -38,18 +38,19 @@ npm i -g lazy-firestore
 After install, use cli app named `firestore`
 
 ```
-firestore/0.1.0
+firestore/0.1.3
 
 Usage:
-  $ firestore <sub-command> [...options] [...sub command arguments]
+  $ firestore 
 
 Commands:
   dump [...name]         Dump Firestore to file
   restore [snapshot]     Restore Firestore from exported data
-  update <doc>           Update document with a JSON file
+  update <doc>           Update document with data in a JSON file
   clean                  Clean Firestore - delete all documents, only use with Emulator's Firestore
   tree [...collections]  Print Firestore structure
   doc [...docs]          Dump Firestore documents
+                         
 
 For more info, run any command with the `--help` flag:
   $ firestore dump --help
@@ -58,6 +59,7 @@ For more info, run any command with the `--help` flag:
   $ firestore clean --help
   $ firestore tree --help
   $ firestore doc --help
+  $ firestore --help
 
 Options:
   -h, --help     Display this message 
@@ -91,15 +93,14 @@ export FIRESTORE_EMULATOR_HOST=localhost:8080
 Export data to files
 
 ```
-firestore/0.1.0
+firestore/0.1.3
 
 Usage:
-$ firestore dump [...name]
+  $ firestore dump [...name]
 
 Options:
---debug        Use debug mode
--h, --help     Display this message
--v, --version  Display version number
+  --debug     Use debug mode 
+  -h, --help  Display this message 
 
 Examples:
 firestore dump
@@ -120,21 +121,23 @@ Restore exported data back to Firestore:
 - Select collections to restore
 
 ```
-firestore/0.1.0
+firestore/0.1.3
 
 Usage:
   $ firestore restore [snapshot]
 
 Options:
-  --only <collection-name>  Collections to import 
-  --dump                    Dump tree of selected snapshot 
-  -h, --help                Display this message 
-  -v, --version             Display version number 
+  --only <collections>    Collections to import, support separate multi collection by comma, Ex: --only user --only=logs,news 
+  --except <collections>  Collections to exclude, support separate multi collection by comma. Ex: --except=user,logs 
+  --dump                  Dump tree of selected snapshot 
+  --debug                 Use debug mode 
+  --dryRun                Dry-run mode 
+  -h, --help              Display this message 
 
 Examples:
 firestore restore
 firestore restore "2021_08_04 09_45_42 - case 1"
-firestore restore "2021_08_04 09_45_42 - case 1" --only users --only posts
+firestore restore "2021_08_04 09_45_42 - case 1" --only users --only posts,news --excepts=users
 ```
 
 ### ⚡️ update
@@ -142,21 +145,20 @@ firestore restore "2021_08_04 09_45_42 - case 1" --only users --only posts
 Update document with data in a JSON file
 
 ```
-firestore/0.1.0
+firestore/0.1.3
 
 Usage:
   $ firestore update <doc>
 
 Options:
-  --file <file>           Doc ID, ex: users/user-1 
-  --debug                 Use debug mode 
+  --file <file>           Path to update file 
   --path <path>           Update path, ex: tags 
+  --debug                 Use debug mode 
   --mode <merge|replace>  Update mode, accept: merge, replace (default: replace)
   -h, --help              Display this message 
-  -v, --version           Display version number 
 
 Examples:
-firestore update --doc users/foo --path=city hanoi.json
+firestore update --path=city --file hanoi.json users/foo
 ```
 
 ### ⚡️ clean
@@ -164,15 +166,14 @@ firestore update --doc users/foo --path=city hanoi.json
 Clean Firestore - delete all documents. Only support Firebase Emulator
 
 ```
-firestore/0.1.0
+firestore/0.1.3
 
 Usage:
   $ firestore clean
 
 Options:
-  --debug        Use debug mode 
-  -h, --help     Display this message 
-  -v, --version  Display version number 
+  --debug     Use debug mode 
+  -h, --help  Display this message 
 
 Examples:
 firestore clean
@@ -183,15 +184,14 @@ firestore clean
 Print tree of collections and its documents
 
 ```
-firestore/0.1.0
+firestore/0.1.3
 
 Usage:
   $ firestore tree [...collections]
 
 Options:
-  --debug        Use debug mode 
-  -h, --help     Display this message 
-  -v, --version  Display version number 
+  --debug     Use debug mode 
+  -h, --help  Display this message 
 
 Examples:
 firestore tree
@@ -203,17 +203,17 @@ firestore tree news users
 View detail of documents
 
 ```
-firestore/0.1.0
+firestore/0.1.3
 
 Usage:
   $ firestore doc [...docs]
 
 Options:
   --debug                          Use debug mode 
+  --json                           Print data in json format 
   --collection <collection-name>   Base collection name 
   --inspect-depth <inspect-depth>  Depth of data to inspect (default: 20)
   -h, --help                       Display this message 
-  -v, --version                    Display version number 
 
 Examples:
 firestore doc
