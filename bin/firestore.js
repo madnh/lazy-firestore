@@ -5,6 +5,8 @@ const pkg = require('../package.json')
 const cli = require('cac')('firestore');
 
 cli.usage("<sub-command> [...options] [...sub command arguments]")
+cli.help()
+cli.version(pkg.version)
 
 const cUpdate = require('../commands/update');
 const cDelete = require('../commands/clean');
@@ -20,8 +22,9 @@ cDelete(cli)
 cTree(cli)
 cDoc(cli)
 
-cli.help()
-cli.version(pkg.version)
+
+// Print help when no command specified
+cli.command('').action(() => cli.outputHelp())
 
 try {
   cli.parse()
