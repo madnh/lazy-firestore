@@ -26,8 +26,8 @@
   "author": "MaDnh",
   "license": "MIT",
   "dependencies": {
-    "@google-cloud/firestore": "^4.14.1",
-    "cac": "^6.7.3",
+    "@google-cloud/firestore": "^4.15.1",
+    "cac": "^6.7.14",
     "consola": "^2.15.3",
     "dayjs": "^1.10.6",
     "fs-extra": "^10.0.0",
@@ -38,5 +38,8 @@
   "bugs": {
     "url": "https://github.com/madnh/LazyFirestore/issues"
   },
-  "homepage": "https://github.com/madnh/LazyFirestore#readme"
+  "homepage": "https://github.com/madnh/LazyFirestore#readme",
+  "volta": {
+    "node": "14.21.1"
+  }
 }
