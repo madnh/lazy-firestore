@@ -200,17 +200,22 @@ firestore tree news users
 
 ### ⚡️ doc
 
-View detail of documents
+- View detail of documents
+- Watch changes
 
 ```
-firestore/0.1.3
+firestore/0.1.5
 
 Usage:
   $ firestore doc [...docs]
 
 Options:
   --debug                          Use debug mode 
+  --watch                          Watch changes of documents 
+  --beep                           [Watch mode] Play "beep" when a change found (default: true)
+  --diff                           [Watch mode] Print what changed only (default: true)
   --json                           Print data in json format 
+  --utc                            Print date in ISO 8601 format (default: false)
   --collection <collection-name>   Base collection name 
   --inspect-depth <inspect-depth>  Depth of data to inspect (default: 20)
   -h, --help                       Display this message 
@@ -220,4 +225,6 @@ firestore doc
 firestore doc user/1
 firestore doc user/1 user/2
 firestore doc --collection user 1 2 posts/hello
+firestore doc --collection user 1 2 posts/hello --watch
+firestore doc --collection user 1 2 posts/hello --watch --no-beep --no-diff
 ```

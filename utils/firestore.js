@@ -57,11 +57,19 @@ async function clearCollection(collectionName) {
 }
 
 /**
+ * @param {string} docId
+ * @returns {DocumentSnapshot<FirebaseFirestore.DocumentData>}
+ */
+function getDocQuery(docId){
+  return firestore.doc(docId).withConverter(converter)
+}
+
+/**
  * @param {...string} docIds
  * @return {Promise<Array<DocumentSnapshot<FirebaseFirestore.DocumentData>>>}
  */
 async function getDocs(...docIds) {
-  const docs = docIds.map(docId => firestore.doc(docId).withConverter(converter))
+  const docs = docIds.map(docId => getDocQuery(docId))
   return firestore.getAll(...docs);
 }
 
@@ -215,6 +223,7 @@ module.exports = {
   setting,
   defaultConverter,
   clearCollection,
+  getDocQuery,
   getDocs,
   dump,
   docRef,
