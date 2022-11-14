@@ -1,7 +1,7 @@
 const consola = require('consola');
 const beeper = require('beeper')
 const { diff } = require('jest-diff')
-const { debug, getDocs, defaultConverter, getDocQuery } = require('../utils/firestore');
+const { debug, docRef, getDocs, defaultConverter } = require('../utils/firestore');
 const converter = require("../utils/firestore-converter");
 const { inspect } = require('util');
 
@@ -119,7 +119,7 @@ async function handler(docs, options) {
     console.log('Watching for changes....')
     const latest = new Map()
     for (const docId of validDocIds) {
-      const query = getDocQuery(docId)
+      const query = docRef(docId)
       query.onSnapshot(async (querySnapshot) => {
         const nowData = querySnapshot.data() || {}
         const latestDocData = latest.get(docId) || {}

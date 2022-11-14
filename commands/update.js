@@ -2,12 +2,14 @@ const fs = require('fs');
 const path = require('path');
 const consola = require('consola');
 const inquirer = require("inquirer");
+const { diff } = require('jest-diff')
 
 const { workingPath } = require('../utils/fs');
 const { scanFiles } = require('../utils/scan');
-const { debug, firestore } = require("../utils/firestore");
+const { debug, firestore, docRef, defaultConverter } = require("../utils/firestore");
 const { isEmpty } = require("../utils/obj");
 const { error } = require("../utils/cli");
+const converter = require("../utils/firestore-converter");
 const dataDirPath = workingPath();
 
 module.exports = command
@@ -27,11 +29,13 @@ function command(cac) {
       .option('--file <file>', 'Path to update file')
       .option('--path <path>', 'Update path, ex: tags')
       .option('--debug', 'Use debug mode')
-      .option('--mode <merge|replace>', 'Update mode, accept: merge, replace', { default: Modes.Replace })
+      .option('--mode <merge|replace>', 'Update mode, accept: merge, replace', { default: Modes.Merge })
       .action(handler)
 }
 
 async function handler(doc, options) {
+  defaultConverter(converter)
+
   if (options.debug) {
     debug(true);
   }
@@ -92,23 +96,39 @@ async function handler(doc, options) {
     }
   }
 
+  const docRefToUpdate = docRef(updateDocId);
+  const docSnapshot = await docRefToUpdate.get()
+  const nowData = docSnapshot.exists ? docSnapshot.data() : {}
+
+  if (options.mode === Modes.Replace) {
+    consola.info("Replace mode")
+    printDiff(nowData, dataToUpdate)
+  } else if (options.mode === Modes.Merge) {
+    consola.log('Merge mode');
+    printDiff(nowData, {
+      ...nowData,
+      ...dataToUpdate
+    })
+  }
+
+  if (!await confirm()) {
+    consola.info('No submit changes, bye!');
+    return
+  }
+
   await firestore.runTransaction(async (transaction) => {
     console.log('Start update');
-    const docRef = firestore.doc(updateDocId);
 
     if (options.mode === Modes.Replace) {
-      consola.info("Replace mode")
       // https://googleapis.dev/nodejs/firestore/latest/Transaction.html#set
-      return transaction.set(docRef, dataToUpdate, { merge: false });
+      return transaction.set(docRefToUpdate, dataToUpdate, { merge: false });
     }
 
     if (options.mode === Modes.Merge) {
-      consola.log('Merge mode');
       // https://googleapis.dev/nodejs/firestore/latest/Transaction.html#update
-      return transaction.update(docRef, dataToUpdate);
+      return transaction.update(docRefToUpdate, dataToUpdate);
     }
   })
-
 
   console.log('');
   consola.success('Done');
@@ -126,4 +146,25 @@ async function selectFileToImport(files) {
   ]);
 
   return answer.file;
+}
+
+async function confirm() {
+  const answer = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'confirm',
+      message: 'Apply changes?',
+      default: false
+    }
+  ]);
+
+  return answer.confirm;
+}
+
+function printDiff(currentData, updateData) {
+  const changed = diff(currentData, updateData, {
+    aAnnotation: `Current`,
+    bAnnotation: 'Modified',
+  })
+  console.log(changed)
 }

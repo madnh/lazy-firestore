@@ -1,6 +1,7 @@
 const consola = require('consola');
-const { debug, dump } = require('../utils/firestore');
+const { debug, dump, defaultConverter } = require('../utils/firestore');
 const { isEmpty } = require('../utils/obj');
+const converter = require("../utils/firestore-converter");
 
 module.exports = command
 
@@ -17,6 +18,8 @@ function command(cac) {
 }
 
 async function handler(collections, options) {
+  defaultConverter(converter)
+
   if (options.debug) {
     debug(true)
   }
