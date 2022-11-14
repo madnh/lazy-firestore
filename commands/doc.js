@@ -16,6 +16,7 @@ function command(cac) {
       .example((bin) => `${bin} ${command} user/1 user/2`)
       .example((bin) => `${bin} ${command} --collection user 1 2 posts/hello`)
       .option('--debug', 'Use debug mode')
+      .option('--json', 'Print data in json format')
       .option('--collection <collection-name>', 'Base collection name')
       .option('--inspect-depth <inspect-depth>', 'Depth of data to inspect', { default: 20 })
       .action(handler)
@@ -66,7 +67,9 @@ async function handler(docs, options) {
     if (docSnapshot.exists) {
       console.log('Created at:', docSnapshot.createTime.toDate());
       console.log('Updated at:', docSnapshot.updateTime.toDate());
-      console.log('Data:', inspect(docSnapshot.data(), { depth: inspectDepth, colors: true }));
+      const dataToPrint = docSnapshot.data();
+      const printData = options.json ? JSON.stringify(dataToPrint, null, 2) : inspect(dataToPrint, { depth: inspectDepth, colors: true })
+      console.log('Data:', printData);
     }
 
     console.groupEnd();
