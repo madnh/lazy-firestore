@@ -21,7 +21,7 @@ function command(cac) {
       .example((bin) => `${bin} ${command} --collection user 1 2 posts/hello --watch --no-beep --no-diff`)
       .option('--debug', 'Use debug mode')
       .option('--watch', 'Watch changes of documents')
-      .option('--beep', '[Watch mode] Play "beep" when a change found', { default: true })
+      .option('--beep', '[Watch mode] Play "beep" when a change found', { default: false })
       .option('--diff', '[Watch mode] Print what changed only', { default: true })
       .option('--json', 'Print data in json format')
       .option('--utc', 'Print date in ISO 8601 format', { default: false })
