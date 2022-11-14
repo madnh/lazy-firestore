@@ -39,7 +39,7 @@ npm i -g lazy-firestore
 After install, use cli app named `firestore`
 
 ```
-firestore/0.1.7
+firestore/0.1.8
 
 Usage:
   $ firestore 
@@ -94,7 +94,7 @@ export FIRESTORE_EMULATOR_HOST=localhost:8080
 Export data to files
 
 ```
-firestore/0.1.7
+firestore/0.1.8
 
 Usage:
   $ firestore dump [...name]
@@ -122,7 +122,7 @@ Restore exported data back to Firestore:
 - Select collections to restore
 
 ```
-firestore/0.1.7
+firestore/0.1.8
 
 Usage:
   $ firestore restore [snapshot]
@@ -146,7 +146,7 @@ firestore restore "2021_08_04 09_45_42 - case 1" --only users --only posts,news 
 Update document with data in a JSON file
 
 ```
-firestore/0.1.7
+firestore/0.1.8
 
 Usage:
   $ firestore update <doc>
@@ -167,7 +167,7 @@ firestore update --path=city --file hanoi.json users/foo
 Clean Firestore - delete all documents. Only support Firebase Emulator
 
 ```
-firestore/0.1.7
+firestore/0.1.8
 
 Usage:
   $ firestore clean
@@ -185,7 +185,7 @@ firestore clean
 Print tree of collections and its documents
 
 ```
-firestore/0.1.7
+firestore/0.1.8
 
 Usage:
   $ firestore tree [...collections]
@@ -205,27 +205,59 @@ firestore tree news users
 - Watch changes
 
 ```
-firestore/0.1.7
+firestore/0.1.8
 
 Usage:
-  $ firestore doc [...docs]
+  $ firestore doc <...docs>
 
 Options:
-  --debug                          Use debug mode 
-  --watch                          Watch changes of documents 
-  --beep                           [Watch mode] Play "beep" when a change found (default: true)
+  --debug                          Use debug mode
+  --watch                          Watch changes of documents
+  --beep                           [Watch mode] Play "beep" when a change found (default: false)
   --diff                           [Watch mode] Print what changed only (default: true)
-  --json                           Print data in json format 
-  --utc                            Print date in ISO 8601 format (default: false)
-  --collection <collection-name>   Base collection name 
+  --json                           Print data in json format
+  --iso                            Print date in ISO 8601 format (default: false)
+  --collection <collection-name>   Base collection name
   --inspect-depth <inspect-depth>  Depth of data to inspect (default: 20)
-  -h, --help                       Display this message 
+  -h, --help                       Display this message
 
 Examples:
-firestore doc
 firestore doc user/1
 firestore doc user/1 user/2
 firestore doc --collection user 1 2 posts/hello
 firestore doc --collection user 1 2 posts/hello --watch
-firestore doc --collection user 1 2 posts/hello --watch --no-beep --no-diff
+firestore doc --collection user 1 2 posts/hello --watch --beep
+firestore doc --collection user 1 2 posts/hello --watch --no-diff
+```
+
+#### Examples:
+
+📝 Print a doc:
+
+```sh
+firestore doc user/1
+```
+
+📝 Print many docs:
+
+```sh
+firestore doc user/1 user/2 posts/hello
+```
+
+📝 Print docs use default collection:
+
+```shell
+firestore doc --collection=user 1 2 posts/hello
+```
+
+📝 Watch docs:
+
+```shell
+firestore doc user/1 user/2 --watch
+```
+
+📝 Watch docs and play beep sound when has changes found:
+
+```shell
+firestore doc user/1 user/2 --watch --beep
 ```

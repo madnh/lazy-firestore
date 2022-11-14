@@ -12,19 +12,19 @@ module.exports = command
  */
 function command(cac) {
   const command = 'doc'
-  cac.command(`${command} [...docs]`, 'Dump Firestore documents')
-      .example((bin) => `${bin} ${command}`)
+  cac.command(`${command} <...docs>`, 'Dump Firestore documents')
       .example((bin) => `${bin} ${command} user/1`)
-      .example((bin) => `${bin} ${command} user/1 user/2`)
+      .example((bin) => `${bin} ${command} user/1 user/2 posts/hello`)
       .example((bin) => `${bin} ${command} --collection user 1 2 posts/hello`)
       .example((bin) => `${bin} ${command} --collection user 1 2 posts/hello --watch`)
-      .example((bin) => `${bin} ${command} --collection user 1 2 posts/hello --watch --no-beep --no-diff`)
+      .example((bin) => `${bin} ${command} --collection user 1 2 posts/hello --watch --beep`)
+      .example((bin) => `${bin} ${command} --collection user 1 2 posts/hello --watch --no-diff`)
       .option('--debug', 'Use debug mode')
       .option('--watch', 'Watch changes of documents')
       .option('--beep', '[Watch mode] Play "beep" when a change found', { default: false })
       .option('--diff', '[Watch mode] Print what changed only', { default: true })
       .option('--json', 'Print data in json format')
-      .option('--utc', 'Print date in ISO 8601 format', { default: false })
+      .option('--iso', 'Print date in ISO 8601 format', { default: false })
       .option('--collection <collection-name>', 'Base collection name')
       .option('--inspect-depth <inspect-depth>', 'Depth of data to inspect', { default: 20 })
       .action(handler)
@@ -41,11 +41,6 @@ async function handler(docs, options) {
   }
 
   let docIds = docs
-
-  if (!docIds.length) {
-    consola.error('You must specified at least 1 document');
-    process.exit(1)
-  }
 
   if (collection) {
     docIds = docs.map(doc => {
@@ -73,8 +68,8 @@ async function handler(docs, options) {
       let createTime = docSnapshot.createTime.toDate();
       let updateTime = docSnapshot.updateTime.toDate();
 
-      console.log('Created at:', options.utc ? createTime : createTime.toLocaleString());
-      console.log('Updated at:', options.utc ? updateTime : updateTime.toLocaleString());
+      console.log('Created at:', options.iso ? createTime.toISOString() : createTime.toLocaleString());
+      console.log('Updated at:', options.iso ? updateTime.toISOString() : updateTime.toLocaleString());
 
       const dataToPrint = docSnapshot.data();
       const printData = options.json ? JSON.stringify(dataToPrint, null, 2) : inspect(dataToPrint, {
