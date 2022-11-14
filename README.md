@@ -8,6 +8,7 @@
 - Clean Firestore - delete all documents. Only support Firebase Emulator
 - Print tree of collections and its documents
 - View detail of documents
+- Watch documents for changes
 
 ### Table of contents
 
@@ -38,7 +39,7 @@ npm i -g lazy-firestore
 After install, use cli app named `firestore`
 
 ```
-firestore/0.1.3
+firestore/0.1.6
 
 Usage:
   $ firestore 
@@ -93,7 +94,7 @@ export FIRESTORE_EMULATOR_HOST=localhost:8080
 Export data to files
 
 ```
-firestore/0.1.3
+firestore/0.1.6
 
 Usage:
   $ firestore dump [...name]
@@ -121,7 +122,7 @@ Restore exported data back to Firestore:
 - Select collections to restore
 
 ```
-firestore/0.1.3
+firestore/0.1.6
 
 Usage:
   $ firestore restore [snapshot]
@@ -145,7 +146,7 @@ firestore restore "2021_08_04 09_45_42 - case 1" --only users --only posts,news 
 Update document with data in a JSON file
 
 ```
-firestore/0.1.3
+firestore/0.1.6
 
 Usage:
   $ firestore update <doc>
@@ -166,7 +167,7 @@ firestore update --path=city --file hanoi.json users/foo
 Clean Firestore - delete all documents. Only support Firebase Emulator
 
 ```
-firestore/0.1.3
+firestore/0.1.6
 
 Usage:
   $ firestore clean
@@ -184,7 +185,7 @@ firestore clean
 Print tree of collections and its documents
 
 ```
-firestore/0.1.3
+firestore/0.1.6
 
 Usage:
   $ firestore tree [...collections]
@@ -204,7 +205,7 @@ firestore tree news users
 - Watch changes
 
 ```
-firestore/0.1.5
+firestore/0.1.6
 
 Usage:
   $ firestore doc [...docs]
