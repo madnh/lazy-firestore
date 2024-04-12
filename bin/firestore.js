@@ -14,6 +14,7 @@ const cDump = require('../commands/dump');
 const cRestore = require('../commands/restore');
 const cTree = require('../commands/tree');
 const cDoc = require('../commands/doc');
+const cDoctor = require('../commands/doctor')
 
 cDump(cli)
 cRestore(cli)
@@ -21,6 +22,7 @@ cUpdate(cli)
 cDelete(cli)
 cTree(cli)
 cDoc(cli)
+cDoctor(cli)
 
 
 // Print help when no command specified
