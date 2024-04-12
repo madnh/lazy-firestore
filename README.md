@@ -16,15 +16,16 @@
 - [Install](#install)
 - [Usage](#usage)
 - [Setup projects](#setup-projects)
-    - [Real project](#real-project)
-    - [Firebase Emulator](#firebase-emulator)
+  - [Real project](#real-project)
+  - [Firebase Emulator](#firebase-emulator)
 - [Sub commands](#sub-commands)
-    - [⚡️ dump](#dump)
-    - [⚡️ restore](#restore)
-    - [⚡️ update](#update)
-    - [⚡️ clean](#clean)
-    - [⚡️ tree](#tree)
-    - [⚡️ doc](#doc)
+  - [⚡️ doctor](#doctor)
+  - [⚡️ dump](#dump)
+  - [⚡️ restore](#restore)
+  - [⚡️ update](#update)
+  - [⚡️ clean](#clean)
+  - [⚡️ tree](#tree)
+  - [⚡️ doc](#doc)
 
 ## Install
 
@@ -42,7 +43,7 @@ After install, use cli app named `firestore`
 firestore/0.1.8
 
 Usage:
-  $ firestore 
+  $ firestore
 
 Commands:
   dump [...name]         Dump Firestore to file
@@ -51,7 +52,8 @@ Commands:
   clean                  Clean Firestore - delete all documents, only use with Emulator's Firestore
   tree [...collections]  Print Firestore structure
   doc [...docs]          Dump Firestore documents
-                         
+  doctor                 Diagnose info to connection to Firestore
+
 
 For more info, run any command with the `--help` flag:
   $ firestore dump --help
@@ -60,11 +62,12 @@ For more info, run any command with the `--help` flag:
   $ firestore clean --help
   $ firestore tree --help
   $ firestore doc --help
+  $ firestore doctor --help
   $ firestore --help
 
 Options:
-  -h, --help     Display this message 
-  -v, --version  Display version number 
+  -h, --help     Display this message
+  -v, --version  Display version number
 ```
 
 ## Setup projects
@@ -84,10 +87,27 @@ Set environment:
 
 ```sh
 export GCLOUD_PROJECT=project-name
-export FIRESTORE_EMULATOR_HOST=localhost:8080 
+export FIRESTORE_EMULATOR_HOST=localhost:8080
 ```
 
 ## Sub commands
+
+### ⚡️ doctor
+
+Diagnose info to connection to Firestore
+
+```
+firestore/0.1.8
+
+Usage:
+  $ firestore doctor
+
+Options:
+  -h, --help  Display this message
+
+Examples:
+firestore doctor
+```
 
 ### ⚡️ dump
 
@@ -100,8 +120,8 @@ Usage:
   $ firestore dump [...name]
 
 Options:
-  --debug     Use debug mode 
-  -h, --help  Display this message 
+  --debug     Use debug mode
+  -h, --help  Display this message
 
 Examples:
 firestore dump
@@ -128,12 +148,12 @@ Usage:
   $ firestore restore [snapshot]
 
 Options:
-  --only <collections>    Collections to import, support separate multi collection by comma, Ex: --only user --only=logs,news 
-  --except <collections>  Collections to exclude, support separate multi collection by comma. Ex: --except=user,logs 
-  --dump                  Dump tree of selected snapshot 
-  --debug                 Use debug mode 
-  --dryRun                Dry-run mode 
-  -h, --help              Display this message 
+  --only <collections>    Collections to import, support separate multi collection by comma, Ex: --only user --only=logs,news
+  --except <collections>  Collections to exclude, support separate multi collection by comma. Ex: --except=user,logs
+  --dump                  Dump tree of selected snapshot
+  --debug                 Use debug mode
+  --dryRun                Dry-run mode
+  -h, --help              Display this message
 
 Examples:
 firestore restore
@@ -152,11 +172,11 @@ Usage:
   $ firestore update <doc>
 
 Options:
-  --file <file>           Path to update file 
-  --path <path>           Update path, ex: tags 
-  --debug                 Use debug mode 
+  --file <file>           Path to update file
+  --path <path>           Update path, ex: tags
+  --debug                 Use debug mode
   --mode <merge|replace>  Update mode, accept: merge, replace (default: merge)
-  -h, --help              Display this message 
+  -h, --help              Display this message
 
 Examples:
 firestore update --path=city --file hanoi.json users/foo
@@ -173,8 +193,8 @@ Usage:
   $ firestore clean
 
 Options:
-  --debug     Use debug mode 
-  -h, --help  Display this message 
+  --debug     Use debug mode
+  -h, --help  Display this message
 
 Examples:
 firestore clean
@@ -191,8 +211,8 @@ Usage:
   $ firestore tree [...collections]
 
 Options:
-  --debug     Use debug mode 
-  -h, --help  Display this message 
+  --debug     Use debug mode
+  -h, --help  Display this message
 
 Examples:
 firestore tree
