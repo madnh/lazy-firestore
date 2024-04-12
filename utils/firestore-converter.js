@@ -14,16 +14,16 @@ const converter = {
 
 module.exports = converter
 
-
 function recursiveCastTimestamp(object) {
-  if(object === null || undefined === object) return object
+  const valueType = typeof object
+  if (object === null || undefined === object || valueType === 'string' || valueType === 'number' || valueType === 'boolean') return object
   const result = {}
   for (const [key, value] of Object.entries(object)) {
     if (value instanceof Timestamp) {
       result[key] = value.toDate()
     } else if (Array.isArray(value)) {
-      result[key] = value.map(valueItem => recursiveCastTimestamp(valueItem))
-    } else if (value !== null && typeof value === "object") {
+      result[key] = value.map((valueItem) => recursiveCastTimestamp(valueItem))
+    } else if (value !== null && typeof value === 'object') {
       result[key] = recursiveCastTimestamp(value)
     } else {
       result[key] = value
@@ -33,10 +33,12 @@ function recursiveCastTimestamp(object) {
 }
 
 function recursiveConvertDate(object) {
+  const valueType = typeof object
+  if (valueType === 'string' || valueType === 'number' || valueType === 'boolean') return object
   const result = {}
   for (const [key, value] of Object.entries(object)) {
-    if (typeof value === "string" && value.startsWith("2") && value.endsWith("Z")) {
-      let valueAsDate = new Date(value);
+    if (typeof value === 'string' && value.startsWith('2') && value.endsWith('Z')) {
+      let valueAsDate = new Date(value)
 
       // console.log(valueAsDate);
       if (valueAsDate.valueOf()) {
@@ -45,8 +47,8 @@ function recursiveConvertDate(object) {
         result[key] = value
       }
     } else if (Array.isArray(value)) {
-      result[key] = value.map(valueItem => recursiveConvertDate(valueItem))
-    } else if (value !== null && typeof value === "object") {
+      result[key] = value.map((valueItem) => recursiveConvertDate(valueItem))
+    } else if (value !== null && typeof value === 'object') {
       result[key] = recursiveConvertDate(value)
     } else {
       result[key] = value

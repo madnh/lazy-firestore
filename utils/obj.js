@@ -223,7 +223,7 @@ function pickRef(obj, pickMap, default_value = undefined) {
 }
 
 function isPlainObject(value) {
-  return Object.prototype.toString.call(value) === '[object Object]'
+  return Object.prototype.toString.call(value) === '[object Object]' && value.constructor === Object && typeof value === 'object'
 }
 
 function sort(obj) {
