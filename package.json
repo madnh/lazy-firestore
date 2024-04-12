@@ -25,6 +25,9 @@
   ],
   "author": "MaDnh",
   "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "dependencies": {
     "@google-cloud/firestore": "^6.6.1",
     "beeper": "^2.1.0",
